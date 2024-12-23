@@ -1,0 +1,322 @@
+{
+  "log": {
+    "disabled": false,
+    "level": "info",
+    "timestamp": true
+  },
+  "experimental": {
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "ui",
+      "external_ui_download_url": "",
+      "external_ui_download_detour": "",
+      "secret": "",
+      "default_mode": "Rule"
+       },
+      "cache_file": {
+            "enabled": true,
+            "path": "cache.db",
+            "store_fakeip": true
+        }
+    },
+    "dns": {
+        "servers": [
+            {
+                "tag": "proxydns",
+                "address": "tls://8.8.8.8/dns-query",
+                "detour": "select"
+            },
+            {
+                "tag": "localdns",
+                "address": "h3://223.5.5.5/dns-query",
+                "detour": "direct"
+            },
+            {
+                "tag": "dns_fakeip",
+                "address": "fakeip"
+            }
+        ],
+        "rules": [
+            {
+                "outbound": "any",
+                "server": "localdns",
+                "disable_cache": true
+            },
+            {
+                "clash_mode": "Global",
+                "server": "proxydns"
+            },
+            {
+                "clash_mode": "Direct",
+                "server": "localdns"
+            },
+            {
+                "rule_set": "geosite-cn",
+                "server": "localdns"
+            },
+            {
+                 "rule_set": "geosite-geolocation-!cn",
+                 "server": "proxydns"
+            },
+             {
+                "rule_set": "geosite-geolocation-!cn",         
+                "query_type": [
+                    "A",
+                    "AAAA"
+                ],
+                "server": "dns_fakeip"
+            }
+          ],
+           "fakeip": {
+           "enabled": true,
+           "inet4_range": "198.18.0.0/15",
+           "inet6_range": "fc00::/18"
+         },
+          "independent_cache": true,
+          "final": "proxydns"
+        },
+      "inbounds": [
+    {
+      "type": "tun",
+           "tag": "tun-in",
+	  "address": [
+      "172.19.0.1/30",
+	  "fd00::1/126"
+      ],
+      "auto_route": true,
+      "strict_route": true,
+      "sniff": true,
+      "sniff_override_destination": true,
+      "domain_strategy": "prefer_ipv4"
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "select",
+      "type": "selector",
+      "default": "auto",
+      "outbounds": [
+        "auto",
+        "vless-FI-s15",
+        "vmess-FI-s15",
+        "hy2-FI-s15",
+"vmess-tls-argo-FI-s15",
+"vmess-argo-FI-s15"
+      ]
+    },
+    {
+      "type": "vless",
+      "tag": "vless-FI-s15",
+      "server": "65.21.206.30",
+      "server_port": 13408,
+      "uuid": "42b5afff-dc45-4ebf-84f9-5a1eaa5dde2f",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.speedtest.net",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+      "reality": {
+          "enabled": true,
+          "public_key": "CvxKjW9tXr6q-Fc9WJsADdPI5J6SwRPf_A8wZXF2_Co",
+          "short_id": ""
+        }
+      }
+    },
+{
+            "server": "65.21.206.30",
+            "server_port": 13409,
+            "tag": "vmess-FI-s15",
+            "tls": {
+                "enabled": false,
+                "server_name": "www.bing.com",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        "www.bing.com"
+                    ]
+                },
+                "path": "/42b5afff-dc45-4ebf-84f9-5a1eaa5dde2f-vm",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "42b5afff-dc45-4ebf-84f9-5a1eaa5dde2f"
+        },
+
+    {
+        "type": "hysteria2",
+        "tag": "hy2-FI-s15",
+        "server": "65.21.206.30",
+        "server_port": 13410,
+        "password": "42b5afff-dc45-4ebf-84f9-5a1eaa5dde2f",
+        "tls": {
+            "enabled": true,
+            "server_name": "www.bing.com",
+            "insecure": true,
+            "alpn": [
+                "h3"
+            ]
+        }
+    },
+{
+            "server": "icook.hk",
+            "server_port": 8443,
+            "tag": "vmess-tls-argo-FI-s15",
+            "tls": {
+                "enabled": true,
+                "server_name": "",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        ""
+                    ]
+                },
+                "path": "/42b5afff-dc45-4ebf-84f9-5a1eaa5dde2f-vm",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "42b5afff-dc45-4ebf-84f9-5a1eaa5dde2f"
+        },
+{
+            "server": "icook.hk",
+            "server_port": 8880,
+            "tag": "vmess-argo-FI-s15",
+            "tls": {
+                "enabled": false,
+                "server_name": "",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        ""
+                    ]
+                },
+                "path": "/42b5afff-dc45-4ebf-84f9-5a1eaa5dde2f-vm",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "42b5afff-dc45-4ebf-84f9-5a1eaa5dde2f"
+        },
+    {
+      "tag": "direct",
+      "type": "direct"
+    },
+    {
+      "tag": "auto",
+      "type": "urltest",
+      "outbounds": [
+        "vless-FI-s15",
+        "vmess-FI-s15",
+        "hy2-FI-s15",
+"vmess-tls-argo-FI-s15",
+"vmess-argo-FI-s15"
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "1m",
+      "tolerance": 50,
+      "interrupt_exist_connections": false
+    }
+  ],
+  "route": {
+      "rule_set": [
+            {
+                "tag": "geosite-geolocation-!cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs",
+                "download_detour": "select",
+                "update_interval": "1d"
+            },
+            {
+                "tag": "geosite-cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-cn.srs",
+                "download_detour": "select",
+                "update_interval": "1d"
+            },
+            {
+                "tag": "geoip-cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
+                "download_detour": "select",
+                "update_interval": "1d"
+            }
+        ],
+    "auto_detect_interface": true,
+    "final": "select",
+    "rules": [
+      {
+      "inbound": "tun-in",
+      "action": "sniff"
+      },
+      {
+      "protocol": "dns",
+      "action": "hijack-dns"
+      },
+      {
+      "port": 443,
+      "network": "udp",
+      "action": "reject"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "select"
+      },
+      {
+        "rule_set": "geoip-cn",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "geosite-cn",
+        "outbound": "direct"
+      },
+      {
+      "ip_is_private": true,
+      "outbound": "direct"
+      },
+      {
+        "rule_set": "geosite-geolocation-!cn",
+        "outbound": "select"
+      }
+    ]
+  },
+    "ntp": {
+    "enabled": true,
+    "server": "time.apple.com",
+    "server_port": 123,
+    "interval": "30m",
+    "detour": "direct"
+  }
+}
