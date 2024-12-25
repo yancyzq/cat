@@ -1,0 +1,983 @@
+- id: ID_7d3pbkxy
+  name: yancyz
+  generalConfig:
+    mode: rule
+    mixed-port: 20122
+    allow-lan: false
+    log-level: info
+    interface-name: ""
+  advancedConfig:
+    port: 0
+    socks-port: 0
+    secret: ID_3lgd3712
+    external-controller: 127.0.0.1:20123
+    external-ui: ""
+    external-ui-url: ""
+    profile:
+      store-cache: true
+      store-fake-ip: true
+      store-rdrc: false
+    domain_strategy: ipv4_only
+    tcp-fast-open: false
+    tcp-multi-path: false
+    udp-fragment: false
+    sniff: true
+    sniff-override-destination: false
+  tunConfig:
+    enable: false
+    stack: Mixed
+    auto-route: true
+    interface-name: ""
+    mtu: 1500
+    strict-route: true
+    endpoint-independent-nat: false
+    inet4-address: 172.19.0.1/30
+    inet6-address: fdfe:dcba:9876::1/126
+  dnsConfig:
+    enable: true
+    fakeip: false
+    strategy: ipv4_only
+    local-dns: https://223.5.5.5/dns-query
+    remote-dns: tls://8.8.8.8
+    resolver-dns: 223.5.5.5
+    remote-resolver-dns: 8.8.8.8
+    final-dns: remote-dns
+    local-dns-detour: 🎯 全球直连
+    remote-dns-detour: 🚀 节点选择
+    fake-ip-range-v4: 198.18.0.1/16
+    fake-ip-range-v6: fc00::/18
+    fake-ip-filter:
+      - .lan
+      - .localdomain
+      - .example
+      - .invalid
+      - .localhost
+      - .test
+      - .local
+      - .home.arpa
+      - .msftconnecttest.com
+      - .msftncsi.com
+    disable-cache: false
+    disable-expire: false
+    independent-cache: false
+    client-subnet: ""
+  proxyGroupsConfig:
+    - id: ID_5gpmm071
+      tag: 🚀 节点选择
+      type: selector
+      proxies:
+        - id: ID_4mqjjs01
+          type: built-in
+          tag: 🎈 自动选择
+      use:
+        - ID_dygzniwj
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_4mqjjs01
+      tag: 🎈 自动选择
+      type: urltest
+      proxies: []
+      use:
+        - ID_dygzniwj
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_2ak9i2p5
+      tag: 🎯 全球直连
+      type: selector
+      proxies:
+        - id: direct
+          type: built-in
+          tag: direct
+        - id: block
+          type: built-in
+          tag: block
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_ex01f541
+      tag: 🛑 全球拦截
+      type: selector
+      proxies:
+        - id: block
+          type: built-in
+          tag: block
+        - id: direct
+          type: built-in
+          tag: direct
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_w0fg23xi
+      tag: 🐟 漏网之鱼
+      type: selector
+      proxies:
+        - id: ID_5gpmm071
+          type: built-in
+          tag: 🚀 节点选择
+        - id: ID_2ak9i2p5
+          type: built-in
+          tag: 🎯 全球直连
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_hb9z1ujo
+      tag: GLOBAL
+      type: selector
+      proxies:
+        - id: direct
+          type: built-in
+          tag: direct
+        - id: block
+          type: built-in
+          tag: block
+        - id: ID_5gpmm071
+          type: built-in
+          tag: 🚀 节点选择
+        - id: ID_4mqjjs01
+          type: built-in
+          tag: 🎈 自动选择
+        - id: ID_2ak9i2p5
+          type: built-in
+          tag: 🎯 全球直连
+        - id: ID_ex01f541
+          type: built-in
+          tag: 🛑 全球拦截
+        - id: ID_w0fg23xi
+          type: built-in
+          tag: 🐟 漏网之鱼
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+  rulesConfig:
+    - id: ID_sb3ziz5r
+      type: inline
+      payload: |-
+        {
+          "protocol": "dns",
+          "port": 53
+        }
+      proxy: dns-out
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_syht56ir
+      type: clash_mode
+      payload: direct
+      proxy: direct
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_sjujeavs
+      type: clash_mode
+      payload: global
+      proxy: GLOBAL
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_m715hls2
+      type: inline
+      payload: |-
+        {
+          "network": "udp",
+          "port": 443
+        }
+      proxy: 🛑 全球拦截
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_2qlh6bvw
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs
+      proxy: 🛑 全球拦截
+      ruleset-name: CATEGORY-ADS
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_44h0qqb5
+      type: ip_is_private
+      payload: ""
+      proxy: 🎯 全球直连
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_js9e17yc
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs
+      proxy: 🎯 全球直连
+      ruleset-name: GEOIP-CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_dhyj3ndl
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs
+      proxy: 🎯 全球直连
+      ruleset-name: GEOSITE-CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_slzpscsn
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs
+      proxy: 🚀 节点选择
+      ruleset-name: GEOLOCATION-!CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_miomfvgq
+      type: final
+      payload: ""
+      proxy: 🐟 漏网之鱼
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+  dnsRulesConfig:
+    - id: ID_y3d9ecw8
+      type: outbound
+      payload: any
+      server: local-dns
+      invert: false
+      disable-cache: true
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_120pfw2u
+      type: fakeip
+      payload: ""
+      server: fakeip-dns
+      invert: false
+      disable-cache: false
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_bga86bxz
+      type: clash_mode
+      payload: direct
+      server: local-dns
+      invert: false
+      disable-cache: false
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_y5q2unat
+      type: clash_mode
+      payload: global
+      server: remote-dns
+      invert: false
+      disable-cache: false
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_r1nnaslz
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs
+      server: local-dns
+      disable-cache: false
+      invert: false
+      ruleset-name: GEOSITE-CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      client-subnet: ""
+    - id: ID_yjlpkcu7
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs
+      server: remote-dns
+      disable-cache: false
+      invert: false
+      ruleset-name: GEOLOCATION-!CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      client-subnet: ""
+  mixinConfig:
+    priority: mixin
+    config: "{}"
+  scriptConfig:
+    code: |-
+      const onGenerate = async (config) => {
+        return config
+      }
+- id: ID_rut2g6d7
+  name: serv00
+  generalConfig:
+    mode: rule
+    mixed-port: 20122
+    allow-lan: false
+    log-level: info
+    interface-name: ""
+  advancedConfig:
+    port: 0
+    socks-port: 0
+    secret: ID_bwcc4011
+    external-controller: 127.0.0.1:20123
+    external-ui: ""
+    external-ui-url: ""
+    profile:
+      store-cache: true
+      store-fake-ip: true
+      store-rdrc: false
+    domain_strategy: ipv4_only
+    tcp-fast-open: false
+    tcp-multi-path: false
+    udp-fragment: false
+    sniff: true
+    sniff-override-destination: false
+  tunConfig:
+    enable: false
+    stack: Mixed
+    auto-route: true
+    interface-name: ""
+    mtu: 1500
+    strict-route: true
+    endpoint-independent-nat: false
+    inet4-address: 172.19.0.1/30
+    inet6-address: fdfe:dcba:9876::1/126
+  dnsConfig:
+    enable: true
+    fakeip: true
+    strategy: ipv4_only
+    local-dns: https://223.5.5.5/dns-query
+    remote-dns: tls://8.8.8.8
+    resolver-dns: 223.5.5.5
+    remote-resolver-dns: 8.8.8.8
+    final-dns: remote-dns
+    local-dns-detour: 🎯 全球直连
+    remote-dns-detour: 🚀 节点选择
+    fake-ip-range-v4: 198.18.0.1/16
+    fake-ip-range-v6: fc00::/18
+    fake-ip-filter:
+      - .lan
+      - .localdomain
+      - .example
+      - .invalid
+      - .localhost
+      - .test
+      - .local
+      - .home.arpa
+      - .msftconnecttest.com
+      - .msftncsi.com
+    disable-cache: false
+    disable-expire: false
+    independent-cache: false
+    client-subnet: ""
+  proxyGroupsConfig:
+    - id: ID_o9grulet
+      tag: bilibili
+      type: selector
+      proxies:
+        - id: direct
+          type: built-in
+          tag: direct
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+      use:
+        - ID_12dq4xk8
+        - ID_20458l9u
+      tolerance: 150
+      filter: 港|香港|HK|台湾|台|TW
+    - id: ID_ylysm8ex
+      tag: 🚀 节点选择
+      type: selector
+      proxies:
+        - id: ID_ex1058q5
+          type: built-in
+          tag: 🎈 自动选择
+      use:
+        - ID_4mjg10jx
+        - ID_96i4jw7o
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_ex1058q5
+      tag: 🎈 自动选择
+      type: urltest
+      proxies: []
+      use:
+        - ID_p4xnoedv
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+      tolerance: 30
+      filter: ""
+    - id: ID_f78w43sb
+      tag: 🎯 全球直连
+      type: selector
+      proxies:
+        - id: direct
+          type: built-in
+          tag: direct
+        - id: block
+          type: built-in
+          tag: block
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_jg20suu8
+      tag: 🛑 全球拦截
+      type: selector
+      proxies:
+        - id: block
+          type: built-in
+          tag: block
+        - id: direct
+          type: built-in
+          tag: direct
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_gqkqikr8
+      tag: 🐟 漏网之鱼
+      type: selector
+      proxies:
+        - id: ID_ylysm8ex
+          type: built-in
+          tag: 🚀 节点选择
+        - id: ID_f78w43sb
+          type: built-in
+          tag: 🎯 全球直连
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_y9o33mne
+      tag: GLOBAL
+      type: selector
+      proxies:
+        - id: direct
+          type: built-in
+          tag: direct
+        - id: block
+          type: built-in
+          tag: block
+        - id: ID_ylysm8ex
+          type: built-in
+          tag: 🚀 节点选择
+        - id: ID_ex1058q5
+          type: built-in
+          tag: 🎈 自动选择
+        - id: ID_f78w43sb
+          type: built-in
+          tag: 🎯 全球直连
+        - id: ID_jg20suu8
+          type: built-in
+          tag: 🛑 全球拦截
+        - id: ID_gqkqikr8
+          type: built-in
+          tag: 🐟 漏网之鱼
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+  rulesConfig:
+    - id: ID_tnke3m6x
+      type: rule_set
+      payload: geosite_bilibili.binary
+      proxy: bilibili
+      invert: false
+      ruleset-name: ""
+      ruleset-format: binary
+      download-detour: ""
+    - id: ID_xabu41rw
+      type: inline
+      payload: |-
+        {
+          "protocol": "dns",
+          "port": 53
+        }
+      proxy: dns-out
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_7t8kq4bd
+      type: clash_mode
+      payload: direct
+      proxy: direct
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_1vbak87n
+      type: clash_mode
+      payload: global
+      proxy: GLOBAL
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_krdxlxje
+      type: inline
+      payload: |-
+        {
+          "network": "udp",
+          "port": 443
+        }
+      proxy: 🛑 全球拦截
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_qcilawis
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs
+      proxy: 🛑 全球拦截
+      ruleset-name: CATEGORY-ADS
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_evds8h0h
+      type: ip_is_private
+      payload: ""
+      proxy: 🎯 全球直连
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_ql7f28xa
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs
+      proxy: 🎯 全球直连
+      ruleset-name: GEOIP-CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_mh0401wr
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs
+      proxy: 🎯 全球直连
+      ruleset-name: GEOSITE-CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_2c4tmbv4
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs
+      proxy: 🚀 节点选择
+      ruleset-name: GEOLOCATION-!CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_lth1yqyl
+      type: final
+      payload: ""
+      proxy: 🐟 漏网之鱼
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+  dnsRulesConfig:
+    - id: ID_otlc1amp
+      type: outbound
+      payload: any
+      server: local-dns
+      invert: false
+      disable-cache: true
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_3xwpviwl
+      type: fakeip
+      payload: ""
+      server: fakeip-dns
+      invert: false
+      disable-cache: false
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_g0j3pcmd
+      type: clash_mode
+      payload: direct
+      server: local-dns
+      invert: false
+      disable-cache: false
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_d6mc04sq
+      type: clash_mode
+      payload: global
+      server: remote-dns
+      invert: false
+      disable-cache: false
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_tnte21dh
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs
+      server: local-dns
+      disable-cache: false
+      invert: false
+      ruleset-name: GEOSITE-CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      client-subnet: ""
+    - id: ID_dmtdmktx
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs
+      server: remote-dns
+      disable-cache: false
+      invert: false
+      ruleset-name: GEOLOCATION-!CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      client-subnet: ""
+  mixinConfig:
+    priority: mixin
+    config: "{}"
+  scriptConfig:
+    code: |-
+      const onGenerate = async (config) => {
+        return config
+      }
+- id: ID_3u72afqh
+  name: P
+  generalConfig:
+    mode: rule
+    mixed-port: 20122
+    allow-lan: false
+    log-level: info
+    interface-name: ""
+  advancedConfig:
+    port: 0
+    socks-port: 0
+    secret: ID_uf2nrzsn
+    external-controller: 127.0.0.1:20123
+    external-ui: ""
+    external-ui-url: ""
+    profile:
+      store-cache: true
+      store-fake-ip: true
+      store-rdrc: false
+    domain_strategy: ipv4_only
+    tcp-fast-open: false
+    tcp-multi-path: false
+    udp-fragment: false
+    sniff: true
+    sniff-override-destination: false
+  tunConfig:
+    enable: false
+    stack: Mixed
+    auto-route: true
+    interface-name: ""
+    mtu: 1500
+    strict-route: true
+    endpoint-independent-nat: false
+    inet4-address: 172.19.0.1/30
+    inet6-address: fdfe:dcba:9876::1/126
+  dnsConfig:
+    enable: true
+    fakeip: false
+    strategy: ipv4_only
+    local-dns: https://223.5.5.5/dns-query
+    remote-dns: tls://8.8.8.8
+    resolver-dns: 223.5.5.5
+    remote-resolver-dns: 8.8.8.8
+    final-dns: remote-dns
+    local-dns-detour: 🎯 全球直连
+    remote-dns-detour: 🚀 节点选择
+    fake-ip-range-v4: 198.18.0.1/16
+    fake-ip-range-v6: fc00::/18
+    fake-ip-filter:
+      - .lan
+      - .localdomain
+      - .example
+      - .invalid
+      - .localhost
+      - .test
+      - .local
+      - .home.arpa
+      - .msftconnecttest.com
+      - .msftncsi.com
+    disable-cache: false
+    disable-expire: false
+    independent-cache: false
+    client-subnet: ""
+  proxyGroupsConfig:
+    - id: ID_jh5gom6m
+      tag: 🚀 节点选择
+      type: selector
+      proxies:
+        - id: ID_a81de4n1
+          type: built-in
+          tag: 🎈 自动选择
+      use:
+        - ID_mpzexh5k
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_a81de4n1
+      tag: 🎈 自动选择
+      type: urltest
+      proxies: []
+      use:
+        - ID_mpzexh5k
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_aro6dqt8
+      tag: 🎯 全球直连
+      type: selector
+      proxies:
+        - id: direct
+          type: built-in
+          tag: direct
+        - id: block
+          type: built-in
+          tag: block
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_syson5ty
+      tag: 🛑 全球拦截
+      type: selector
+      proxies:
+        - id: block
+          type: built-in
+          tag: block
+        - id: direct
+          type: built-in
+          tag: direct
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_soshpyit
+      tag: 🐟 漏网之鱼
+      type: selector
+      proxies:
+        - id: ID_jh5gom6m
+          type: built-in
+          tag: 🚀 节点选择
+        - id: ID_aro6dqt8
+          type: built-in
+          tag: 🎯 全球直连
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+    - id: ID_tqzcuku9
+      tag: GLOBAL
+      type: selector
+      proxies:
+        - id: direct
+          type: built-in
+          tag: direct
+        - id: block
+          type: built-in
+          tag: block
+        - id: ID_jh5gom6m
+          type: built-in
+          tag: 🚀 节点选择
+        - id: ID_a81de4n1
+          type: built-in
+          tag: 🎈 自动选择
+        - id: ID_aro6dqt8
+          type: built-in
+          tag: 🎯 全球直连
+        - id: ID_syson5ty
+          type: built-in
+          tag: 🛑 全球拦截
+        - id: ID_soshpyit
+          type: built-in
+          tag: 🐟 漏网之鱼
+      use: []
+      url: ""
+      interval: 300
+      tolerance: 150
+      filter: ""
+  rulesConfig:
+    - id: ID_pexdpiq4
+      type: inline
+      payload: |-
+        {
+          "protocol": "dns",
+          "port": 53
+        }
+      proxy: dns-out
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_osj77jq6
+      type: clash_mode
+      payload: direct
+      proxy: direct
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_nivrftzg
+      type: clash_mode
+      payload: global
+      proxy: GLOBAL
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_i2uqw1uk
+      type: inline
+      payload: |-
+        {
+          "network": "udp",
+          "port": 443
+        }
+      proxy: 🛑 全球拦截
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_mduvaevs
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs
+      proxy: 🛑 全球拦截
+      ruleset-name: CATEGORY-ADS
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_1ngij0hn
+      type: ip_is_private
+      payload: ""
+      proxy: 🎯 全球直连
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+    - id: ID_l13ho5mf
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs
+      proxy: 🎯 全球直连
+      ruleset-name: GEOIP-CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_g3pd5lmr
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs
+      proxy: 🎯 全球直连
+      ruleset-name: GEOSITE-CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_5davpfb3
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs
+      proxy: 🚀 节点选择
+      ruleset-name: GEOLOCATION-!CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      invert: false
+    - id: ID_gptwc81s
+      type: final
+      payload: ""
+      proxy: 🐟 漏网之鱼
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      invert: false
+  dnsRulesConfig:
+    - id: ID_8y9s5scw
+      type: outbound
+      payload: any
+      server: local-dns
+      invert: false
+      disable-cache: true
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_9u9lngib
+      type: fakeip
+      payload: ""
+      server: fakeip-dns
+      invert: false
+      disable-cache: false
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_q4pi7o4w
+      type: clash_mode
+      payload: direct
+      server: local-dns
+      invert: false
+      disable-cache: false
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_sdaxwsg4
+      type: clash_mode
+      payload: global
+      server: remote-dns
+      invert: false
+      disable-cache: false
+      ruleset-name: ""
+      ruleset-format: ""
+      download-detour: ""
+      client-subnet: ""
+    - id: ID_he6txfht
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs
+      server: local-dns
+      disable-cache: false
+      invert: false
+      ruleset-name: GEOSITE-CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      client-subnet: ""
+    - id: ID_6z99ru0e
+      type: rule_set_url
+      payload: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs
+      server: remote-dns
+      disable-cache: false
+      invert: false
+      ruleset-name: GEOLOCATION-!CN
+      ruleset-format: binary
+      download-detour: 🎯 全球直连
+      client-subnet: ""
+  mixinConfig:
+    priority: mixin
+    config: "{}"
+  scriptConfig:
+    code: |-
+      const onGenerate = async (config) => {
+        return config
+      }
